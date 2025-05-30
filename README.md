@@ -1,11 +1,12 @@
-# Computer Vision for Animal Segmentation
-**Pixel-wise segmentation of wildlife images using classical machine learning and U-Net**
+# Wildlife Image Classification with Segmentation-Aided CNNs
 
-## Overview
+This project focuses on **classifying wildlife images** (elephant, rhino, flamingo, emu) using semantic segmentation to enhance the performance of a convolutional classifier. It combines classical machine learning, U-Net segmentation, and CNN-based classification into a clean, modular pipeline.
 
-This project addresses the challenge of segmenting animals (elephant, rhino, emu, flamingo) from real-world images using both classical machine learning models and deep learning (U-Net). The pipeline has been designed to reflect production-level standards, focusing on modularity, reproducibility, and clarity. It includes data preprocessing, patch extraction, model training, evaluation, and visualization of results.
+---
 
-This repository serves both as a research experiment and as a portfolio project in the field of computer vision, with potential applications in ecology, conservation, and smart image annotation systems.
+## Objective
+
+Predict **what animal appears in an image**, using tools like U-Net to guide the classifier by focusing on the relevant region of interest.
 
 ---
 
@@ -29,8 +30,7 @@ computer-vision-animal-segmentation/
 ├── notebooks/                # Exploratory notebooks and experiments
 │   ├── 01_exploratory_data_analysis.ipynb
 │   ├── 02_preprocessing_pipeline.ipynb
-│   ├── 03_classic_ml_training.ipynb
-│   └── 04_unet_training.ipynb
+│   └── 03_model_training.ipynb
 │
 ├── src/                      # Modular source code
 │   ├── preprocessing/
@@ -50,27 +50,68 @@ computer-vision-animal-segmentation/
 │   └── metrics/
 │
 ├── README.md                 # Project description and instructions
+├── main.py
 ├── requirements.txt          # Dependencies list
 └── .gitignore                # Files and folders to ignore in git
 ```
 
-## Key Features
 
--  Clean and modular pipeline using Python
--  EDA on image/mask statistics (distribution, resolution, class balance)
--  Custom patch extractor for training efficiency
--  Training of classical models (Random Forest, XGBoost)
--  Deep learning pipeline with PyTorch U-Net
--  Pixel-wise evaluation using IoU, Dice, Precision, Recall
--  Side-by-side visualization of predictions vs. ground truth
--  Designed for scalability and adaptation to other datasets
+---
 
+## Pipeline Overview
 
-## Dataset Description
+1. **EDA & Mask Quality Checks**  
+2. **Semantic Segmentation**  
+   - U-Net in PyTorch  
+   - Random Forest / XGBoost baseline
+3. **Mask-guided Preprocessing**  
+   - Full image
+   - Mask as 4th channel
+   - Cropped ROI (Region of Interest)
+4. **CNN Image Classification**  
+5. **Evaluation & Visualization**  
 
-- Images and binary masks grouped by animal species.
-- Masks are perfectly aligned by filename with their corresponding images.
-- Each image-mask pair is suitable for supervised semantic segmentation.
+---
+
+## Models Included
+
+| Model                | Purpose              | Notes                              |
+|---------------------|----------------------|-------------------------------------|
+| `UNetWrapper`        | Segmentation         | PyTorch implementation of U-Net     |
+| `ClassicModel`       | Segmentation (ML)    | Random Forest / XGBoost             |
+| `SimpleCNNClassifier`| Classification       | 3-layer CNN                         |
+| `ConvNetBaseline`    | Segment. baseline    | Simple encoder-decoder conv net     |
+
+---
+
+## Metrics Tracked
+
+- **Accuracy**
+- **F1 Score (macro/micro)**
+- **Precision / Recall**
+- **IoU, Dice (for segmentation)**
+- **Confusion Matrix**
+
+---
+
+## Sample Results
+
+| Method                      | Accuracy | F1 Score | Precision | Recall |
+|-----------------------------|----------|----------|-----------|--------|
+| CNN (raw image)             | 82.4%    | 0.81     | 0.83      | 0.80   |
+| CNN + U-Net (ROI focused)   | 89.2%    | 0.88     | 0.89      | 0.87   |
+| CNN + Classic Mask          | 85.0%    | 0.84     | 0.85      | 0.83   |
+
+---
+
+## Visual Example
+
+| Input Image | U-Net Mask | ROI Cropped | Predicted Class |
+|-------------|------------|-------------|-----------------|
+| ✅          | ✅         | ✅          | ✅               |
+
+---
+
 
 Example:
 data/
@@ -92,13 +133,6 @@ source .venv/bin/activate   # On Windows: .venv\Scripts\activate
 pip install -r requirements.txt
 You may need to install PyTorch manually depending on your hardware (CUDA or CPU).
 
-## Metrics Used
-Intersection over Union (IoU)
-Dice Coefficient
-Pixel Accuracy
-Precision / Recall
-Confusion Matrix (for binary masks)
-
 ## Models
 
 Model	Type	Notes
@@ -106,26 +140,12 @@ Random Forest	Classical ML	Trained on flattened pixel vectors
 XGBoost	Classical ML	Trained per-pixel using patch statistics
 U-Net	Deep Learning	Full image segmentation (PyTorch)
 
-## Notebooks
-
-Notebook	Description
-01_exploratory_data_analysis.ipynb	Initial EDA of image and mask characteristics
-02_preprocessing_pipeline.ipynb	Preprocessing, patch extraction, and stats
-03_classic_ml_training.ipynb	Training and evaluation of classical models
-04_unet_training.ipynb	Full PyTorch U-Net training pipeline
-
-## TODOs
-
- Add cross-validation with stratified patches
- Include Mask R-CNN as a comparative deep model
- Optimize model checkpointing and early stopping
- Experiment with data augmentation (albumentations)
 
 ## Acknowledgements
-Data collected and manually verified for accuracy
-Inspiration from segmentation challenges and academic examples
-Deep learning architecture inspired by the original U-Net paper (Ronneberger et al., 2015)
 
+U-Net architecture: Ronneberger et al. (2015)
+OpenCV, PyTorch, Scikit-learn
+Inspiration from segmentation benchmarks and ecological AI applications
 ## Author
 [Carlota Vázquez Arrojo] – Data Scientist | Computer Vision Specialist
 Contact: [www.linkedin.com/in/carlota-vazquez-arrojo-b3a639213]
