@@ -94,24 +94,6 @@ computer-vision-animal-segmentation/
 
 ---
 
-## Sample Results
-
-| Method                      | Accuracy | F1 Score | Precision | Recall |
-|-----------------------------|----------|----------|-----------|--------|
-| CNN (raw image)             | 82.4%    | 0.81     | 0.83      | 0.80   |
-| CNN + U-Net (ROI focused)   | 89.2%    | 0.88     | 0.89      | 0.87   |
-| CNN + Classic Mask          | 85.0%    | 0.84     | 0.85      | 0.83   |
-
----
-
-## Visual Example
-
-| Input Image | U-Net Mask | ROI Cropped | Predicted Class |
-|-------------|------------|-------------|-----------------|
-| ✅          | ✅         | ✅          | ✅               |
-
----
-
 
 Example:
 data/
